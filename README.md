@@ -1,7 +1,10 @@
 Complete Diablo 3 Gear Calculator.
 
-Written in Java using SWT.
+Written in Java using SWT and Jackson JSON.
 
+-Calculates all base stats, dps, effective hp and more from class and item info.
+-Import character data from battle.net or create new characters.
+-Create/compare new items.
 
 License
 

@@ -33,7 +33,7 @@ public class D3Calc {
 	public D3Calc(Display display) {
 		
 		shell = new Shell(display);
-        shell.setText("D3 Gear Calculator v1.0");
+        shell.setText("D3 Gear Calculator v1.1");
         shell.setSize(800, 600);
         shell.setLocation(300, 300);
         
@@ -64,7 +64,7 @@ public class D3Calc {
 		Label label = new Label(main, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(gridData);
 		label = new Label(main, SWT.NONE);
-		label.setText(activeChar.name + ", " + activeChar.characterClass.className);
+		label.setText(activeChar.name + ", " + activeChar.characterClass.className + " (Paragon Level " + activeChar.paragon + ")");
 		gridData = new GridData(GridData.CENTER, GridData.CENTER, false,
 				false, 4, 1);
 		label.setLayoutData(gridData);
@@ -101,15 +101,23 @@ public class D3Calc {
 
         MenuItem newItem = new MenuItem(fileMenu, SWT.PUSH);
         newItem.setText("&New");
+        newItem.setAccelerator(SWT.MOD1 | 'N');
+        
+        MenuItem impItem = new MenuItem(fileMenu, SWT.PUSH); 
+        impItem.setText("Import");
+        impItem.setAccelerator(SWT.MOD1 | 'I');
         
         MenuItem saveItem = new MenuItem(fileMenu, SWT.PUSH);
         saveItem.setText("&Save");
+        saveItem.setAccelerator(SWT.MOD1 | 'S');
         
         MenuItem loadItem = new MenuItem(fileMenu, SWT.PUSH);
         loadItem.setText("&Load");
+        loadItem.setAccelerator(SWT.MOD1 | 'L');
         
         MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
-        exitItem.setText("&Exit");
+        exitItem.setText("E&xit");
+        exitItem.setAccelerator(SWT.MOD1 | 'X');
         
         //draw edit menu
         
@@ -126,7 +134,10 @@ public class D3Calc {
         copyItem.setText("&Copy Compare to Current");
         
         MenuItem resetItem = new MenuItem(editMenu, SWT.PUSH);
-        resetItem.setText("&Copy Current to Compare");
+        resetItem.setText("C&opy Current to Compare");
+        
+        MenuItem tempItem = new MenuItem(editMenu, SWT.PUSH);
+        tempItem.setText("&Set Paragon Level");
         
         shell.setMenuBar(menuBar);
         
@@ -136,6 +147,22 @@ public class D3Calc {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 new CharacterBuilder(display);
+                drawUI();
+            }
+        });
+        
+        impItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                new ProfileImporter(display);
+                compareChar = new Character ("", activeChar.characterClass);
+                for (int i = 0; i < compareChar.equip.length; i ++) {
+            		if (activeChar.equip[i] != null) {
+            			compareChar.equip[i] = activeChar.equip[i];
+            		}
+            	}
+                activeChar.update();
+                compareChar.update();
                 drawUI();
             }
         });
@@ -165,6 +192,7 @@ public class D3Calc {
                 			compareChar.equip[i] = activeChar.equip[i];
                 		}
                 	}
+                    compareChar.paragon = activeChar.paragon;
                     compareChar.update();
                     drawUI();
                 }
@@ -213,8 +241,16 @@ public class D3Calc {
             }
         });
         
-        //checkbox stuff
-        //shell.addSelectionListener(); event.widget.whatever;
+        tempItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+            	new Paragon(display);
+            	activeChar.update();
+                compareChar.update();
+                drawUI();
+            }
+        });
+        
         
 	}
 	
@@ -352,11 +388,11 @@ public class D3Calc {
 		text = new Text(group, SWT.READ_ONLY);
 		text.setText("Melee Reduction:");
 		text = new Text(group, SWT.READ_ONLY);
-		text.setText(Integer.toString(c.reducM) + "%");
+		text.setText(df.format(c.reducM) + "%");
 		text = new Text(group, SWT.READ_ONLY);
 		text.setText("Range Reduction:");
 		text = new Text(group, SWT.READ_ONLY);
-		text.setText(Integer.toString(c.reducR) + "%");
+		text.setText(df.format(c.reducR) + "%");
 		
 		group.pack();
 		groupC.pack();

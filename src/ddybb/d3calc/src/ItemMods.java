@@ -32,7 +32,8 @@ public enum ItemMods {
 	BlockChance(5, "Block Chance Bonus"),
 	//shield only
 	BlockChanceBase(3, "Shield Block Chance"),
-	BlockAmount(3, "Block Amount");
+	BlockAmount(3, "Block Amount"),
+	BlockMax(3, "Block Amount Max");
 	
 	public int mask;
 	public String modName;

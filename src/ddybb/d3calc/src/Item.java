@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Item implements Serializable {
 	
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 110L;
 	public int dexterity = 0;
 	public int intelligence = 0;
 	public int strength = 0;
@@ -19,8 +19,8 @@ public class Item implements Serializable {
 	public int litRes = 0;
 	public int poisonRes = 0;
 	public int arcRes = 0;
-	public int reducM = 0;
-	public int reducR = 0;
+	public float reducM = 0;
+	public float reducR = 0;
 	
 	public float critChance = 0f;
 	public int critDamage = 0;
@@ -39,9 +39,10 @@ public class Item implements Serializable {
 	//shield only
 	public float blockChanceBase = 0f;
 	public int blockAmount = 0;
+	public int blockMax = 0;
 	
 	public ItemType type;
-	public ItemMods[] mods = new ItemMods[8];
+	public ItemMods[] mods = new ItemMods[16];
 	
 	public Item(ItemType type) {
 		
@@ -64,7 +65,7 @@ public class Item implements Serializable {
 		case LitRes: return litRes;
 		case PoisonRes: return poisonRes;
 		case ArcRes: return arcRes;
-		case Life: return arcRes;
+		case Life: return life;
 		case CritChance: return critChance;
 		case CritDamage: return critDamage;
 		case AtkSpeed: return atkSpeed;

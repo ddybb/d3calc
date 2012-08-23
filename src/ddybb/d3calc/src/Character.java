@@ -5,9 +5,11 @@ import java.util.ArrayList;
 
 public class Character implements Serializable {
 	
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 110L;
 	public String name;
 	public CharacterClass characterClass;
+	
+	public int paragon = 0;
 	
 	public int baseDex = 67;
 	public int baseInt = 67;
@@ -20,6 +22,7 @@ public class Character implements Serializable {
 	public int vitality = 0;
 	public int hp = 0;
 	
+	private float baseDR = 0f;
 	public int baseCritDamage = 50;
 	public float baseCritChance = 5f;
 	public int critDamage = 0;
@@ -40,8 +43,8 @@ public class Character implements Serializable {
 	public int arcRes = 0;
 	public int armor = 0;
 	public int life = 0;
-	public int reducM = 0;
-	public int reducR = 0;
+	public float reducM = 0;
+	public float reducR = 0;
 	
 	public float blockChance = 0f;
 	
@@ -76,9 +79,9 @@ public class Character implements Serializable {
 	private void setBaseStats() {
 		
 		switch (this.characterClass) {
-		case Barbarian: baseStr += 120; break;
+		case Barbarian: baseStr += 120; baseDR = 0.3f; break;
 		case DemonHunter: baseDex += 120; break;
-		case Monk: baseDex += 120; break;
+		case Monk: baseDex += 120; baseDR = 0.3f; break;
 		case WitchDoctor: baseInt += 120; break;
 		case Wizard: baseInt += 120; break;
 		default: break;
@@ -86,6 +89,23 @@ public class Character implements Serializable {
 		
 		update();
 		
+	}
+	
+	private void addParagonBonus() {
+		
+		dexterity += paragon;
+		intelligence += paragon;
+		strength += paragon;
+		vitality += paragon * 2;
+		
+		switch (this.characterClass) {
+		case Barbarian: strength += paragon * 2; break;
+		case DemonHunter: dexterity += paragon * 2; break;
+		case Monk: dexterity += paragon * 2; break;
+		case WitchDoctor: intelligence += paragon * 2; break;
+		case Wizard: intelligence += paragon * 2; break;
+		default: break;
+		}
 	}
 	
 	private void addSkills() {
@@ -131,6 +151,10 @@ public class Character implements Serializable {
 		blockChance = 0f;
 		damageMin = 0;
 		damageMax = 0;
+		reducM = 0f;
+		reducR = 0f;
+		
+		addParagonBonus();
 		
 		//sum equipment bonuses
 		for (int i = 0; i < equip.length; i++) {
@@ -155,8 +179,8 @@ public class Character implements Serializable {
 				blockChance += equip[i].blockChance;
 				damageMin += equip[i].damageMin;
 				damageMax += equip[i].damageMax;
-				reducM += equip[i].reducM;
-				reducR += equip[i].reducR;
+				reducM += ((100f - reducM) / 100f) * equip[i].reducM;
+				reducR += ((100f - reducR) / 100f) * equip[i].reducR;
 			}
 		}
 		
@@ -200,9 +224,9 @@ public class Character implements Serializable {
 		poisonResPct = poisonRes / (300f + poisonRes);
 		arcResPct = arcRes / (300f + arcRes);
 		
-		ehp = (int)((float)hp / ((1f - armorPct) * (1f - allResPct)));
-		ehpM = ehp * 100 / (100 - reducM);
-		ehpR = ehp * 100 / (100 - reducR);
+		ehp = (int)((float)hp / ((1f - armorPct) * (1f - allResPct) * (1f - baseDR)));
+		ehpM = (int)(ehp * 100f / (100f - reducM));
+		ehpR = (int)(ehp * 100f / (100f - reducR));
 		ehpD = (int)(ehp  / (1f - dodge / 100f));
 		ehpDM = (int)(ehpM  / (1f - dodge / 100f));
 		ehpDR = (int)(ehpR  / (1f - dodge / 100f));
@@ -366,6 +390,8 @@ public class Character implements Serializable {
 		//WD
 		
 		//Wiz
+		if (Skill.blur.flag) { reducM += ((100f - reducM) / 100f) * 20f; }
+		
 		if (Skill.energy.flag) { armor = (int)(armor * 1.65f); }
 		
 		if (Skill.energyP.flag) {
@@ -404,8 +430,8 @@ public class Character implements Serializable {
 		if (Skill.threatF.flag) { ehp = (int)(ehp / 0.8f / 0.85f); }
 		
 		if (Skill.weapS.flag) { dps = dps * 1.15f; }
-		//DH
 		
+		//DH
 		if (Skill.arcB.flag) { dps = dps * 1.15f; }
 		
 		if (Skill.steady.flag) { dps = dps * 1.2f; }

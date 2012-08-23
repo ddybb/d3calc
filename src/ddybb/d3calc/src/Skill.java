@@ -41,7 +41,7 @@ public enum Skill {
 	pierce(3, false, "Pierce the Veil"),
 	
 	//wiz
-	//blur(4, false, "Blur"),
+	blur(4, false, "Blur"),
 	energy(4, false, "Energy Armor"),
 	energyP(4, false, "EA/Prismatic Armor"),
 	energyB(4, false, "EA/Pinpoint Barrier"),

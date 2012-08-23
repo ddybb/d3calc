@@ -110,7 +110,7 @@ public class ItemBuilder {
 		
 		GridData data = new GridData(GridData.END, GridData.CENTER, false, false, 1, 1);
 		
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < combo.length; i++) {
 			combo[i] = new Combo(shell, SWT.DROP_DOWN | SWT.READ_ONLY);
 			for (ItemMods mod : ItemMods.values()) {
 				if (mod.mask == type.mask || mod.mask == 0 || (mod.mask == 4 && type.mask != 1) || (mod.mask == 5 && type.mask != 3)) {
@@ -238,8 +238,8 @@ public class ItemBuilder {
 		case BlockChance: item.blockChance = (int)value; break;
 		case BlockChanceBase: item.blockChanceBase = (float)value; break;
 		case BlockAmount: item.blockAmount = (int)value; break;
-		case ReducM: item.reducM = (int)value; break;
-		case ReducR: item.reducR = (int)value; break;
+		case ReducM: item.reducM = (float)value; break;
+		case ReducR: item.reducR = (float)value; break;
 		default: break;
 		}
 		
