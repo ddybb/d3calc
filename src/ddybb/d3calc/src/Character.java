@@ -225,14 +225,15 @@ public class Character implements Serializable {
 		arcResPct = arcRes / (300f + arcRes);
 		
 		ehp = (int)((float)hp / ((1f - armorPct) * (1f - allResPct) * (1f - baseDR)));
-		ehpM = (int)(ehp * 100f / (100f - reducM));
-		ehpR = (int)(ehp * 100f / (100f - reducR));
-		ehpD = (int)(ehp  / (1f - dodge / 100f));
-		ehpDM = (int)(ehpM  / (1f - dodge / 100f));
-		ehpDR = (int)(ehpR  / (1f - dodge / 100f));
 		
 		calculateDPS();
 		addFinalSkillBonus();
+		
+		ehpD = (int)(ehp  / (1f - dodge / 100f));
+		ehpM = (int)(ehp * 100f / (100f - reducM));
+		ehpR = (int)(ehp * 100f / (100f - reducR));
+		ehpDM = (int)(ehpM  / (1f - dodge / 100f));
+		ehpDR = (int)(ehpR  / (1f - dodge / 100f));
 		
 	}
 	

@@ -116,7 +116,13 @@ public class ProfileImporter {
 		ArrayList<Object> heroes = (ArrayList)profile.get("heroes");
 		for (Object o : heroes) {
 			Map<String, Object> temp = (Map)o;
-			heroIDs.put((String)temp.get("name"), (int)temp.get("id"));
+			String name = (String)temp.get("name");
+			int i = 1;
+			if (heroIDs.containsKey(name)) {
+				name = name + i;
+				i++;
+			}
+			heroIDs.put(name, (int)temp.get("id"));
 		}
 		
 		drawHeroSelect();
@@ -136,8 +142,8 @@ public class ProfileImporter {
 		GridData data = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
 		final List list = new List(comp, SWT.BORDER);
 		list.setLayoutData(data);
-		for (String name : heroIDs.keySet()) {
-			list.add(name);
+		for (String key : heroIDs.keySet()) {
+			list.add(key);
 		}
 		
 		data = new GridData();

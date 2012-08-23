@@ -13,6 +13,7 @@ public class HeroImporter {
 	
 	public static void importHero(Map<String, Object> herodata, String r) {
 		
+		if (herodata == null) { return; }
 		region = r;
 		name = (String)herodata.get("name");
 		setClass((String)herodata.get("class"));
