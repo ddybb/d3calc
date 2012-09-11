@@ -21,8 +21,11 @@ public class ItemBuilder {
 	private ItemType type;
 	private boolean initFlag;
 	private double[] values = new double[8];
+	private Item itemEdit;
 	
-	public ItemBuilder(Display display) {
+	public ItemBuilder(Display display, Item item) {
+		
+		itemEdit = item;
 		
 		shell = new Shell(display);
         shell.setText("New Item");
@@ -37,8 +40,11 @@ public class ItemBuilder {
         	if (!display.readAndDispatch()) {
             display.sleep();
         	}
-        }
-        
+        }        
+	}
+	
+	public ItemBuilder(Display display) {
+		new ItemBuilder(display, null);
 	}
 	
 	private void initUI() {
@@ -56,31 +62,17 @@ public class ItemBuilder {
 			
 		}
 		
+		if (itemEdit != null) {
+			type = itemEdit.type;
+			initMods(type);
+			initFlag = true;
+		}
+		
 		slot.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                switch (slot.getSelectionIndex()) {
-                case 0: type = ItemType.Helm; break;
-                case 1: type = ItemType.Shoulders; break;
-                case 2: type = ItemType.Chest; break;
-                case 3: type = ItemType.Pants; break;
-                case 4: type = ItemType.Gloves; break;
-                case 5: type = ItemType.Bracers; break;
-                case 6: type = ItemType.Belt; break;
-                case 7: type = ItemType.Boots; break;
-                case 8: type = ItemType.Amulet; break;
-                case 9: type = ItemType.Ring1; break;
-                case 10: type = ItemType.Ring2; break;
-                case 11: type = ItemType.Weapon2H; break;
-                case 12: type = ItemType.WeaponBow; break;
-                case 13: type = ItemType.Weapon1; break;
-                case 14: type = ItemType.Weapon2; break;
-                case 15: type = ItemType.Source; break;
-                case 16: type = ItemType.Shield; break;
-                case 17: type = ItemType.Quiver; break;
-                default: break;
-                }
+                type = ItemType.getTypeByIndex(slot.getSelectionIndex());
             	if (!initFlag) {
             		initMods(type);
             		initFlag = true;
@@ -124,6 +116,23 @@ public class ItemBuilder {
 			text[i].setText("0");
 			text[i].setLayoutData(data);
 	        
+		}
+		
+		String[] modList = combo[0].getItems();
+		if (itemEdit != null) {
+			slot.select(type.index);
+			int i = 0;
+			for (ItemMods mod : itemEdit.mods) {
+				if (mod != null) {
+					for (int j = 0; j < modList.length; j++) {
+						if (modList[j].contains(mod.modName)) {
+							combo[i].select(j);
+							text[i].setText(itemEdit.getValueByMod(mod).toString());
+						}
+					}
+					i++;
+				}
+			}
 		}
 		
 		Button equipButton = new Button(shell, SWT.PUSH);

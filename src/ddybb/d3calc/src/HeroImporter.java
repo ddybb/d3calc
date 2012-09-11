@@ -22,6 +22,8 @@ public class HeroImporter {
 		items = (Map)herodata.get("items");
 		getItems();
 		
+		D3Calc.activeChar.paragon = (int)herodata.get("paragonLevel");
+		
 	}
 	
 	private static void setClass(String classname) {
@@ -67,9 +69,9 @@ public class HeroImporter {
 	}
 	
 	private static ItemType getMHType(Map<String, Object> iteminfo) {
-		Map<String, Object> itemtype = (Map)iteminfo.get("type");
-		String id = (String)itemtype.get("id");
-		if (id.equals("Bow") || id.equals("Crossbow")) {
+		//Map<String, Object> itemtype = (Map)iteminfo.get("type");
+		String id = (String)iteminfo.get("id");
+		if (id.contains("Bow") || id.contains("Crossbow")) {
 			return ItemType.WeaponBow;
 		}
 		if (id.contains("2H")) {
@@ -80,16 +82,16 @@ public class HeroImporter {
 	}
 	
 	private static ItemType getOHType(Map<String, Object> iteminfo) {
-		Map<String, Object> itemtype = (Map)iteminfo.get("type");
-		String id = (String)itemtype.get("id");
-		System.out.println(id);
-		if (id.equals("Quiver")) {
+		//Map<String, Object> itemtype = (Map)iteminfo.get("type");
+		String id = (String)iteminfo.get("id");
+		//System.out.println(id);
+		if (id.contains("Quiver")) {
 			return ItemType.Quiver;
 		}
-		if (id.equals("Orb") || id.equals("Mojo")) {
+		if (id.contains("Orb") || id.contains("Mojo")) {
 			return ItemType.Source;
 		}
-		if (id.equals("Shield")) {
+		if (id.contains("Shield")) {
 			return ItemType.Shield;
 		}
 		return ItemType.Weapon2;
@@ -167,6 +169,8 @@ public class HeroImporter {
 		case "Damage_Percent_Reduction_From_Ranged": item.reducR += ((Double)(100d * (double)stat.get("min"))).intValue(); break;
 		case "Damage_Min#Physical": item.damageMin += ((Double)stat.get("min")).intValue(); item.damageMax += ((Double)stat.get("min")).intValue(); break;
 		case "Damage_Delta#Physical": item.damageMax += ((Double)stat.get("min")).intValue(); break;
+		case "Damage_Bonus_Min#Physical": item.damageMin += ((Double)stat.get("min")).intValue(); item.damageMax += ((Double)stat.get("min")).intValue(); break;
+		case "Damage_Bonus_Delta#Physical": item.damageMax += ((Double)stat.get("min")).intValue(); break;
 		default: break;
 		}
 	}

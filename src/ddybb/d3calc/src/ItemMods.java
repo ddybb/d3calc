@@ -2,9 +2,9 @@ package ddybb.d3calc.src;
 
 public enum ItemMods {
 	
+	Strength(0, "Strength"),
 	Dexterity(0, "Dexterity"),
 	Intelligence(0, "Intelligence"),
-	Strength(0, "Strength"),
 	Vitality(0, "Vitality"),
 	
 	Life(0, "Life %"),

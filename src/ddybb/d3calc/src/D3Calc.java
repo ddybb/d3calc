@@ -27,13 +27,15 @@ public class D3Calc {
 	private Composite main;
 	public static boolean tempFlag = false;
 	
+	private Button[] itemEditButton = new Button[13];
+	
 	private final String[] slots = { "Helm", "Shoulder", "Chest", "Pants", "Gloves", "Bracers",
 			"Belt", "Boots", "Amulet", "Ring 1", "Ring 2", "Main Hand", "Off Hand" };
 
 	public D3Calc(Display display) {
 		
 		shell = new Shell(display);
-        shell.setText("D3 Gear Calculator v1.1");
+        shell.setText("D3 Gear Calculator v1.2");
         shell.setSize(800, 600);
         shell.setLocation(300, 300);
         
@@ -85,7 +87,11 @@ public class D3Calc {
 		drawSkills();
 		
 		main.pack();
-		shell.pack();
+		//don't pack shell if maximized
+		if (!shell.getMaximized()) {
+			shell.pack();
+		}
+		
 	}
 	
 	private void initMenu() {
@@ -159,6 +165,7 @@ public class D3Calc {
                 for (int i = 0; i < compareChar.equip.length; i ++) {
             		if (activeChar.equip[i] != null) {
             			compareChar.equip[i] = activeChar.equip[i];
+            			compareChar.paragon = activeChar.paragon;
             		}
             	}
                 activeChar.update();
@@ -190,9 +197,10 @@ public class D3Calc {
                     for (int i = 0; i < compareChar.equip.length; i ++) {
                 		if (activeChar.equip[i] != null) {
                 			compareChar.equip[i] = activeChar.equip[i];
+                			compareChar.paragon = activeChar.paragon;
                 		}
                 	}
-                    compareChar.paragon = activeChar.paragon;
+                    activeChar.update();
                     compareChar.update();
                     drawUI();
                 }
@@ -219,9 +227,7 @@ public class D3Calc {
             @Override
             public void widgetSelected(SelectionEvent e) {
             	for (int i = 0; i < compareChar.equip.length; i ++) {
-            		if (compareChar.equip[i] != null) {
-            			activeChar.equip[i] = compareChar.equip[i];
-            		}
+            		activeChar.equip[i] = compareChar.equip[i];
             	}
                 activeChar.update();
                 drawUI();
@@ -232,9 +238,7 @@ public class D3Calc {
             @Override
             public void widgetSelected(SelectionEvent e) {
             	for (int i = 0; i < compareChar.equip.length; i ++) {
-            		if (activeChar.equip[i] != null) {
-            			compareChar.equip[i] = activeChar.equip[i];
-            		}
+            		compareChar.equip[i] = activeChar.equip[i];
             	}
                 compareChar.update();
                 drawUI();
@@ -273,6 +277,18 @@ public class D3Calc {
 					}
 				}
 			}
+			itemEditButton[i] = new Button(group, SWT.PUSH);
+			itemEditButton[i].setText("Add/Edit");
+			final Item item = c.equip[i] != null ? c.equip[i] : new Item(ItemType.getTypeBySlot(i));
+			
+			itemEditButton[i].addSelectionListener(new SelectionAdapter() {
+
+	            @Override
+	            public void widgetSelected(SelectionEvent e) {
+	            	new ItemBuilder(display, item);
+	                drawUI();
+	            };
+	        });
 		}
 		
 	}

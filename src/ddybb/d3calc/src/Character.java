@@ -280,9 +280,9 @@ public class Character implements Serializable {
 			
 			float avgAtkSpeed = (equip[11].atkSpeedBase + equip[12].atkSpeedBase) / 2f;
 			atkSpeed = avgAtkSpeed * (115f + (float)atkSpeedBonus) / 100f;
-			float avgDPS = (equip[11].dps + equip[12].dps) / 2f;
-			float bonusDPS = (float)(damageMin + damageMax) / 2f * avgAtkSpeed;
-			dps = (avgDPS + bonusDPS) / equip[11].atkSpeedBase * atkSpeed * primary * (1f + (critChance / 100f) * ((float)critDamage / 100f));
+			float avgDPS = (equip[11].dps / equip[11].atkSpeedBase + equip[12].dps / equip[12].atkSpeedBase) * atkSpeed / 2f;
+			float bonusDPS = (float)(damageMin + damageMax) * atkSpeed / 2f;
+			dps = (avgDPS + bonusDPS) * primary * (1f + (critChance / 100f) * ((float)critDamage / 100f));
 			return;
 			
 		}
